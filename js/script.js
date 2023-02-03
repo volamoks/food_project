@@ -6,6 +6,12 @@ const tab = document.querySelectorAll('.tabheader__item');
 const tabContent = document.querySelectorAll('.tabcontent');
 const timer = document.querySelectorAll('.timer__block');
 
+const itemDesc = document.querySelector('.menu__item-descr');
+const itemPrice = document.querySelector('.menu__item-total');
+const itemSubtitle = document.querySelector('.menu__item-subtitle');
+const itemPic = document.querySelector('.menu__item');
+const menuContainer = document.querySelector('.menu__field .container');
+
 // Modal Section
 function modalSection() {
     const showModal = () => {
@@ -133,5 +139,80 @@ function setTimer() {
     setTimer();
     tabSection();
     modalSection();
-    setTimer();
 })();
+
+class PromoCard {
+    constructor(subtitle, descr, price) {
+        this.subtitle = subtitle;
+        this.descr = descr;
+        this.price = price;
+        this.transfer = 70;
+        this.convertUSdtoRub();
+    }
+    convertUSdtoRub = () =>
+        new Intl.NumberFormat('ru-RU').format(this.price * this.transfer);
+    markup() {
+        return `
+            <div class="menu__item">
+                <img
+                    src="img/tabs/vegy.jpg"
+                    alt="vegy"
+                />
+                <h3 class="menu__item-subtitle">${this.subtitle}</h3>
+                <div class="menu__item-descr">
+                    ${this.descr}
+                </div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total">
+                        <span>${this.convertUSdtoRub()}</span> руб/день
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+const descr1 =
+    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!';
+
+const subtitle1 = 'Меню "Фитнес" ';
+const price1 = '269';
+
+const card1 = new PromoCard(subtitle1, descr1, price1);
+
+console.log(card1.markup());
+
+menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
+menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
+menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
+
+// class Rectangle {
+//     constructor(heigth, width) {
+//         this.width = width;
+//         this.height = heigth;
+//     }
+//     calcArea() {
+//         return this.width * this.height;
+//     }
+// }
+
+// const square = new Rectangle(10, 10);
+
+// // console.log(long.calcArea());
+
+// class ColorRectangle extends Rectangle {
+//     constructor(height, width, color) {
+//         super(height, width);
+//         this.color = color;
+//     }
+
+//     setColor() {
+//         console.log(this.width * this.height + ` is ${this.color}`);
+//     }
+// }
+
+// const ColorRectangleItem = new ColorRectangle(20, 12, 'red');
+
+// console.log(ColorRectangleItem.setColor());
