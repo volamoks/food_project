@@ -1,0 +1,11 @@
+[33mcommit cb4336deb4359bf5aaa19e55ba8874e35b62eb7f[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Abror <komalov@me.com>
+Date:   Fri Feb 3 14:50:24 2023 +0500
+
+    added:extra fucntion
+
+[33mcommit 4c0f83bf9b386f259c7bfe25f4fe3292065ec5b6[m
+Author: Abror <komalov@me.com>
+Date:   Fri Feb 3 14:48:21 2023 +0500
+
+    added:modal window, timer and tabs
