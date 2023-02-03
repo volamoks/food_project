@@ -125,6 +125,7 @@ function setTimer() {
         seconds.innerHTML = 0;
 
         clearInterval(updateTimer);
+        clearInterval(updateTimer);
     }
 }
 
