@@ -13,6 +13,14 @@ const itemPic = document.querySelector('.menu__item');
 const menuContainer = document.querySelector('.menu__field .container');
 
 // Modal Section
+
+init = () => {
+    setTimer();
+    tabSection();
+    calorieCalculation();
+    modalSection();
+};
+
 function modalSection() {
     const showModal = () => {
         modal.style.display = 'flex';
@@ -135,12 +143,6 @@ function setTimer() {
     }
 }
 
-(init = () => {
-    setTimer();
-    tabSection();
-    modalSection();
-})();
-
 class PromoCard {
     constructor(subtitle, descr, price) {
         this.subtitle = subtitle;
@@ -182,37 +184,101 @@ const price1 = '269';
 
 const card1 = new PromoCard(subtitle1, descr1, price1);
 
-console.log(card1.markup());
+// console.log(card1.markup());
 
 menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
 menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
 menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
 
-// class Rectangle {
-//     constructor(heigth, width) {
-//         this.width = width;
-//         this.height = heigth;
-//     }
-//     calcArea() {
-//         return this.width * this.height;
-//     }
-// }
+const calcChoose = document.querySelectorAll('.calculating__choose');
+const calcChooseItem = document.querySelector('.calculating__choose-item');
+const calcGender = document.querySelector('.calculating__choose_small');
+const calcParam = document.querySelector('.calculating__choose_medium');
+const calcHeight = document.querySelector('#height');
+console.log(calcHeight);
+const calcGenderItem = document.querySelectorAll(
+    '.calculating__choose_small .calculating__choose-item',
+);
 
-// const square = new Rectangle(10, 10);
+const calcActivity = document.querySelector('.calculating__choose_small');
+const calcActivityItem = document.querySelectorAll(
+    '.calculating__choose_big .calculating__choose-item',
+);
 
-// // console.log(long.calcArea());
+// console.log(calcActivityItem);
+// console.log(tabHeader);
 
-// class ColorRectangle extends Rectangle {
-//     constructor(height, width, color) {
-//         super(height, width);
-//         this.color = color;
-//     }
+const calorieCalculation = () => {
+    let sex = 'female',
+        height,
+        weight,
+        age,
+        ratio = 1.375,
+        result = '2700';
 
-//     setColor() {
-//         console.log(this.width * this.height + ` is ${this.color}`);
-//     }
-// }
+    result = document.querySelector('.calculating__result span');
+    function calcTotal() {
+        if (!sex || !height || !weight || !age || !ratio) {
+            result.textContent = '0';
+            return;
+        }
+        if (sex === 'female') {
+            result.textContent = Math.round(
+                (447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio,
+            );
+        } else {
+            result.textContent = Math.round(
+                (88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio,
+            );
+        }
+    }
 
-// const ColorRectangleItem = new ColorRectangle(20, 12, 'red');
+    calcTotal();
+    function getInfo(parentSelector, activeClass) {
+        const elem = document.querySelectorAll(`${parentSelector} div`);
 
-// console.log(ColorRectangleItem.setColor());
+        document.querySelector(parentSelector).addEventListener('click', e => {
+            if (e.target.getAttribute('data-ratio')) {
+                ratio = +e.target.getAttribute('data-ratio');
+            } else {
+                sex = e.target.getAttribute('id');
+            }
+
+            elem.forEach(item => {
+                item.classList.remove(activeClass);
+            });
+
+            e.target.classList.add(activeClass);
+            calcTotal();
+        });
+    }
+    function getInput(selector) {
+        const input = document.querySelector(selector);
+
+        input.addEventListener('input', () => {
+            switch (input.getAttribute('id')) {
+                case 'height':
+                    height = +input.value;
+                    break;
+                case 'weight':
+                    weight = +input.value;
+                    break;
+                case 'age':
+                    age = +input.value;
+                    break;
+            }
+            calcTotal();
+        });
+    }
+    getInput('#height');
+    getInput('#weight');
+    getInput('#age');
+    getInfo('.calculating__choose_small', 'calculating__choose-item_active');
+    getInfo('.calculating__choose_big', 'calculating__choose-item_active');
+
+    console.log(sex, height, weight, age, ratio);
+};
+
+// calorieCalculation();
+
+init();
