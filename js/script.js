@@ -6,19 +6,13 @@ const tab = document.querySelectorAll('.tabheader__item');
 const tabContent = document.querySelectorAll('.tabcontent');
 const timer = document.querySelectorAll('.timer__block');
 
-const itemDesc = document.querySelector('.menu__item-descr');
-const itemPrice = document.querySelector('.menu__item-total');
-const itemSubtitle = document.querySelector('.menu__item-subtitle');
-const itemPic = document.querySelector('.menu__item');
-const menuContainer = document.querySelector('.menu__field .container');
-
 // Modal Section
 
 init = () => {
     setTimer();
     tabSection();
     calorieCalculation();
-    modalSection();
+    // modalSection();
     slider();
 };
 
@@ -59,10 +53,11 @@ function modalSection() {
     document.addEventListener('click', e => {
         if (e.target == modal) closeModal();
     });
-    // showModalByTime();
+    showModalByTime();
 }
 
 // TAB Section
+
 const tabSection = function () {
     const hidePics = () =>
         tabContent.forEach(item => {
@@ -141,22 +136,59 @@ function setTimer() {
     }
 }
 
+//cards section
+
+const itemDesc = document.querySelector('.menu__item-descr');
+const itemPrice = document.querySelector('.menu__item-total');
+const itemSubtitle = document.querySelector('.menu__item-subtitle');
+const itemPic = document.querySelector('.menu__item');
+const menuContainer = document.querySelector('.menu__field .container');
+
+const getData = async url => {
+    const res = await fetch(url);
+
+    if (!res.ok) throw new Error(`${res.status}`);
+
+    return await res.json();
+};
+
+getData('http://localhost:3000/menu').then(data =>
+    data.forEach(({ img, altimg, title: subtitle, descr, price }) => {
+        console.log(img, altimg, subtitle, descr, price);
+        new PromoCard(
+            img,
+            altimg,
+            subtitle,
+            descr,
+            price,
+            menuContainer,
+        ).render();
+    }),
+);
+
 class PromoCard {
-    constructor(subtitle, descr, price) {
+    constructor(img, altimg, subtitle, descr, price, selector) {
+        this.img = img;
+        this.altimg = altimg;
         this.subtitle = subtitle;
         this.descr = descr;
         this.price = price;
         this.transfer = 17;
         this.convertUSdtoRub();
+        this.parent = selector;
     }
+
     convertUSdtoRub = () =>
         new Intl.NumberFormat('ru-RU').format(this.price * this.transfer);
-    markup() {
-        return `
+
+    render() {
+        // const element = document.createElement('div');
+
+        let markup = `
             <div class="menu__item">
                 <img
-                    src="img/tabs/vegy.jpg"
-                    alt="vegy"
+                    src="${this.img}"
+                    alt="${this.altimg}"
                 />
                 <h3 class="menu__item-subtitle">${this.subtitle}</h3>
                 <div class="menu__item-descr">
@@ -171,22 +203,9 @@ class PromoCard {
                 </div>
             </div>
         `;
+        this.parent.insertAdjacentHTML('beforeend', markup);
     }
 }
-
-const descr1 =
-    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!';
-
-const subtitle1 = 'Меню "Фитнес" ';
-const price1 = '269';
-
-const card1 = new PromoCard(subtitle1, descr1, price1);
-
-// console.log(card1.markup());
-
-menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
-menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
-menuContainer.insertAdjacentHTML('afterbegin', card1.markup());
 
 const calcChoose = document.querySelectorAll('.calculating__choose');
 const calcChooseItem = document.querySelector('.calculating__choose-item');
@@ -202,9 +221,6 @@ const calcActivity = document.querySelector('.calculating__choose_small');
 const calcActivityItem = document.querySelectorAll(
     '.calculating__choose_big .calculating__choose-item',
 );
-
-// console.log(calcActivityItem);
-// console.log(tabHeader);
 
 const calorieCalculation = () => {
     let sex =
@@ -300,8 +316,6 @@ const calorieCalculation = () => {
     function initCalc(selector, activeClass) {
         const items = document.querySelectorAll(selector);
 
-        // items.forEach(item => );
-
         items.forEach(item => {
             item.classList.remove(activeClass);
 
@@ -323,6 +337,7 @@ const calorieCalculation = () => {
     );
     initCalc('.calculating__choose_big div', 'calculating__choose-item_active');
 };
+
 //slider
 
 const slider = () => {
