@@ -19,6 +19,7 @@ init = () => {
     tabSection();
     calorieCalculation();
     modalSection();
+    slider();
 };
 
 function modalSection() {
@@ -80,22 +81,25 @@ const tabSection = function () {
     };
 
     tabHeader.addEventListener('click', e => {
-        if (e.target.classList.contains('tabheader__item')) {
+        if (e.target.classList.contains('tabheader__item'))
             tab.forEach((item, i) => {
                 if (e.target == item) {
                     hidePics(tabContent);
                     showPics(tabContent, i);
                 }
             });
-        }
     });
     hidePics();
     showPics(tabContent, (i = 0));
 };
 
+const addZero = time => {
+    return time >= 0 && time < 10 ? '0' + time : time;
+};
+
 //timer
 function setTimer() {
-    const finalDate = new Date('2024-03-01');
+    const finalDate = new Date('2023-03-01');
 
     const timeRemaining = finaldate => {
         const timeDiff = finaldate - new Date();
@@ -113,12 +117,6 @@ function setTimer() {
         hours = document.querySelector('#hours'),
         minutes = document.querySelector('#minutes'),
         seconds = document.querySelector('#seconds');
-
-    const addZero = function (time) {
-        if (time >= 0 && time < 10) {
-            return '0' + time;
-        } else return time;
-    };
 
     updateTimer = setInterval(update, 1000);
 
@@ -148,7 +146,7 @@ class PromoCard {
         this.subtitle = subtitle;
         this.descr = descr;
         this.price = price;
-        this.transfer = 70;
+        this.transfer = 17;
         this.convertUSdtoRub();
     }
     convertUSdtoRub = () =>
@@ -195,7 +193,7 @@ const calcChooseItem = document.querySelector('.calculating__choose-item');
 const calcGender = document.querySelector('.calculating__choose_small');
 const calcParam = document.querySelector('.calculating__choose_medium');
 const calcHeight = document.querySelector('#height');
-console.log(calcHeight);
+// console.log(calcHeight);
 const calcGenderItem = document.querySelectorAll(
     '.calculating__choose_small .calculating__choose-item',
 );
@@ -324,10 +322,54 @@ const calorieCalculation = () => {
         'calculating__choose-item_active',
     );
     initCalc('.calculating__choose_big div', 'calculating__choose-item_active');
-
-    console.log(sex, height, weight, age, ratio);
 };
+//slider
 
-// calorieCalculation();
+const slider = () => {
+    const sliderContent = document.querySelector('.offer__slider-wrapper'),
+        slides = document.querySelectorAll('.offer__slide'),
+        current = document.querySelector('#current'),
+        total = document.querySelector('#total'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        slidesWraper = document.querySelector('.offer__slider'),
+        slidesWindow = document.querySelector('.slider_inner'),
+        width = window.getComputedStyle(slidesWraper).width;
+
+    slidesIndex = 1;
+    offset = 0;
+    numOfSlide = slides.length;
+    finalSlide = width.replace(/\D/g, '') * (numOfSlide - 1);
+
+    total.textContent = addZero(numOfSlide);
+    current.textContent = addZero(slidesIndex);
+
+    slidesWindow.style.display = 'flex';
+    slidesWindow.style.width = 100 * numOfSlide + '%';
+    slidesWindow.style.transition = '0.5s all';
+    slidesWraper.style.overflow = 'hidden';
+
+    slides.forEach(slide => (slide.style.width = width));
+
+    next.addEventListener('click', () => {
+        offset == +finalSlide
+            ? (offset = 0)
+            : (offset += +width.replace(/\D/g, '')),
+            (slidesWindow.style.transform = `translateX(-${offset}px)`);
+
+        slidesIndex == numOfSlide ? (slidesIndex = 1) : slidesIndex++;
+        current.textContent = addZero(slidesIndex);
+    });
+
+    prev.addEventListener('click', () => {
+        offset == 0
+            ? (offset = finalSlide)
+            : (offset -= +width.replace(/\D/g, '')),
+            (slidesWindow.style.transform = `translateX(-${offset}px)`);
+
+        slidesIndex == 1 ? (slidesIndex = numOfSlide) : slidesIndex--;
+        current.textContent = addZero(slidesIndex);
+    });
+};
 
 init();
